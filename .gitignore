@@ -22,4 +22,6 @@ npm-debug.log*
 .idea/
 
 # OS
-.DS_Store
+.DS_Store.env
+.env.local
+.env.production
