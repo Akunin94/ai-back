@@ -1,10 +1,12 @@
+import dotenv from 'dotenv'
+
+dotenv.config({ path: '.env.local' })
+dotenv.config()
+
 import express, { Request, Response } from 'express'
 import cors from 'cors'
-import dotenv from 'dotenv'
 import Anthropic from '@anthropic-ai/sdk'
 import ragRoutes from './routes/rag.routes'
-
-dotenv.config()
 
 const app = express()
 const PORT = process.env.PORT || 3001
