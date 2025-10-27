@@ -1,4 +1,5 @@
 import dotenv from 'dotenv'
+import projectRoutes from './routes/project.routes'
 
 dotenv.config({ path: '.env.local' })
 dotenv.config()
@@ -15,7 +16,7 @@ const PORT = process.env.PORT || 3001
 app.use(cors({
   origin: process.env.FRONTEND_URL || 'http://localhost:5173'
 }))
-app.use(express.json())
+app.use(express.json({ limit: '50mb' }))
 
 // Инициализация Anthropic
 const anthropic = new Anthropic({
@@ -141,6 +142,8 @@ app.post('/api/chat/stream', async (req: Request<{}, {}, ChatRequest>, res: Resp
 
 // RAG routes
 app.use('/api/rag', ragRoutes)
+
+app.use('/api/project', projectRoutes)
 
 // Health check
 app.get('/health', (req: Request, res: Response) => {
