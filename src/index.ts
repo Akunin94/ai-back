@@ -53,7 +53,7 @@ app.post('/api/chat', async (req: Request<{}, {}, ChatRequest>, res: Response) =
     }
 
     const response = await anthropic.messages.create({
-      model: 'claude-sonnet-4-20250514',
+      model: 'claude-sonnet-4-5-20250929',
       max_tokens,
       temperature,
       system,
@@ -97,7 +97,7 @@ app.post('/api/chat/stream', async (req: Request<{}, {}, ChatRequest>, res: Resp
     res.setHeader('Connection', 'keep-alive')
 
     const stream = await anthropic.messages.stream({
-      model: 'claude-sonnet-4-20250514',
+      model: 'claude-sonnet-4-5-20250929',
       max_tokens,
       temperature,
       system,
