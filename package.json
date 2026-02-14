@@ -12,12 +12,12 @@
   "author": "",
   "license": "ISC",
   "engines": {
-    "node": ">=20.19.50",
+    "node": ">=20.19.5",
     "npm": ">=10.8.2"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.30.1",
-    "@huggingface/inference": "^2.8.1",
+    "@huggingface/inference": "^4.0.5",
     "@langchain/anthropic": "^0.3.7",
     "@langchain/community": "^0.3.12",
     "@langchain/core": "^0.3.15",
