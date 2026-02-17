@@ -7,7 +7,9 @@ dotenv.config()
 import express, { Request, Response } from 'express'
 import cors from 'cors'
 import Anthropic from '@anthropic-ai/sdk'
-import ragRoutes from './routes/rag.routes'
+import ragRoutes, { vectorStore } from './routes/rag.routes'
+import { createHandler } from 'graphql-http/lib/use/express'
+import { createSchema } from './graphql/schema'
 
 const app = express()
 const PORT = process.env.PORT || 3001
@@ -150,6 +152,10 @@ app.get('/health', (req: Request, res: Response) => {
   res.json({ status: 'ok' })
 })
 
+// GraphQL endpoint
+app.all('/graphql', createHandler({ schema: createSchema(vectorStore) }))
+
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`)
+  console.log(`GraphQL endpoint: http://localhost:${PORT}/graphql`)
 })

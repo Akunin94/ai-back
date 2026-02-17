@@ -8,8 +8,8 @@ import { RAGService } from '../services/rag.service'
 
 const router = Router()
 
-// Инициализация сервисов
-const vectorStore = new VectorStoreService()
+// Инициализация сервисов (экспортируем для GraphQL)
+export const vectorStore = new VectorStoreService()
 const documentLoader = new DocumentLoaderService()
 
 // Инициализируем vector store при старте
