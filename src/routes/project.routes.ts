@@ -5,8 +5,8 @@ import { VectorStoreService } from '../services/vectorStore.service'
 const router = Router()
 let vectorStore: VectorStoreService | null = null
 
-// Ленивая инициализация - создаём только когда нужно
-const getVectorStore = () => {
+// Ленивая инициализация - создаём только когда нужно (экспортируем для GraphQL)
+export const getVectorStore = () => {
   if (!vectorStore) {
     vectorStore = new VectorStoreService()
   }

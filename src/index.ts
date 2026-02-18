@@ -1,5 +1,5 @@
 import dotenv from 'dotenv'
-import projectRoutes from './routes/project.routes'
+import projectRoutes, { getVectorStore as getProjectVectorStore } from './routes/project.routes'
 
 dotenv.config({ path: '.env.local' })
 dotenv.config()
@@ -153,7 +153,7 @@ app.get('/health', (req: Request, res: Response) => {
 })
 
 // GraphQL endpoint
-app.all('/graphql', createHandler({ schema: createSchema(vectorStore) }))
+app.all('/graphql', createHandler({ schema: createSchema(vectorStore, getProjectVectorStore) }))
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`)

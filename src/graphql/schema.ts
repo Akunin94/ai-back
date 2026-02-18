@@ -3,11 +3,23 @@ import {
   GraphQLObjectType,
   GraphQLString,
   GraphQLInt,
+  GraphQLFloat,
   GraphQLBoolean,
   GraphQLNonNull,
   GraphQLList
 } from 'graphql'
 import { VectorStoreService } from '../services/vectorStore.service'
+
+// === Health ===
+
+const HealthType = new GraphQLObjectType({
+  name: 'Health',
+  fields: {
+    status: { type: new GraphQLNonNull(GraphQLString) }
+  }
+})
+
+// === Documents ===
 
 const UploadedFileType = new GraphQLObjectType({
   name: 'UploadedFile',
@@ -33,11 +45,42 @@ const ClearResponseType = new GraphQLObjectType({
   }
 })
 
-export function createSchema(vectorStore: VectorStoreService) {
+// === Project Search ===
+
+const SearchMetadataType = new GraphQLObjectType({
+  name: 'SearchMetadata',
+  fields: {
+    source: { type: new GraphQLNonNull(GraphQLString) },
+    filename: { type: new GraphQLNonNull(GraphQLString) },
+    page: { type: GraphQLInt },
+    uploadedAt: { type: new GraphQLNonNull(GraphQLString) }
+  }
+})
+
+const SearchResultType = new GraphQLObjectType({
+  name: 'SearchResult',
+  fields: {
+    content: { type: new GraphQLNonNull(GraphQLString) },
+    metadata: { type: new GraphQLNonNull(SearchMetadataType) },
+    score: { type: new GraphQLNonNull(GraphQLFloat) }
+  }
+})
+
+export function createSchema(
+  vectorStore: VectorStoreService,
+  getProjectVectorStore: () => VectorStoreService
+) {
   return new GraphQLSchema({
     query: new GraphQLObjectType({
       name: 'Query',
       fields: {
+        health: {
+          type: new GraphQLNonNull(HealthType),
+          resolve() {
+            return { status: 'ok' }
+          }
+        },
+
         documents: {
           type: new GraphQLNonNull(DocumentsResponseType),
           resolve() {
@@ -56,6 +99,18 @@ export function createSchema(vectorStore: VectorStoreService) {
             }))
 
             return { files, totalChunks: documents.length }
+          }
+        },
+
+        projectSearch: {
+          type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(SearchResultType))),
+          args: {
+            query: { type: new GraphQLNonNull(GraphQLString) },
+            limit: { type: GraphQLInt }
+          },
+          async resolve(_: unknown, args: { query: string; limit?: number }) {
+            const store = getProjectVectorStore()
+            return store.search(args.query, args.limit ?? 10)
           }
         }
       }
